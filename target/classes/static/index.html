@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">	
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+    <title>Administración Hospitalaria - Pacientes</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Hospital Admin</div>
+        <ul class="menu">
+            <li><a href="index.html" class="active"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+            <li><a href="medicos.html"><i class="fas fa-user-md"></i> Médicos</a></li>
+            <li><a href="especialidades.html"><i class="fas fa-stethoscope"></i> Especialidades</a></li>
+            <li><a href="citas.html"><i class="fas fa-calendar-check"></i> Citas</a></li>
+            <li><a href="historiales.html"><i class="fas fa-file-medical"></i> Historiales</a></li>
+        </ul>
+        <div class="user"><i class="fas fa-user-circle"></i></div>
+    </nav>
+
+    <main>
+        <header>
+            <h1>Gestión de Pacientes</h1>
+            <div class="actions">
+                <div class="search">
+                    <input type="text" id="buscar-paciente-nombre" placeholder="Ingrese el nombre del paciente">
+                    <input type="text" id="buscar-paciente-dni" placeholder="DNI">
+                    <button class="btn-search" onclick="buscarPaciente()"><i class="fas fa-search"></i></button>
+                </div>
+                <button class="btn-add" id="btn-add-paciente" onclick="openModal('aniadir-paciente')"><i class="fas fa-plus"></i> Añadir Paciente</button>
+            </div>
+        </header>
+
+        <div class="card">
+            <table class="table" id="tabla-pacientes">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>DNI</th>
+						<th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Fecha Nacimiento</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <!-- <button class="btn-action edit" onclick="openModal('editar-paciente')"><i class="fas fa-edit"></i></button> -->
+                <!-- <button class="btn-action delete" onclick="openModal('modal-confirm')"><i class="fas fa-trash"></i></button> -->
+                <tbody id="consulta-pacientes">
+                    
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal para Añadir Paciente -->
+    <div class="modal-overlay" id="aniadir-paciente">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Añadir Paciente</h3>
+                <button class="btn-close" onclick="closeAllModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="paciente-nombre">Nombre</label>
+                    <input type="text" id="paciente-nombre">
+                </div>
+                <div class="form-group">
+                    <label for="paciente-apellidos">Apellidos</label>
+                    <input type="text" id="paciente-apellidos">
+                </div>
+                <div class="form-group">
+                    <label for="paciente-dni">DNI</label>
+                    <input type="text" id="paciente-dni" maxlength="9">
+                </div>
+				<div class="form-group">
+				    <label for="paciente-direccion">Dirección</label>
+				    <input type="text" id="paciente-direccion">
+				</div>
+                <div class="form-group">
+                    <label for="paciente-telefono">Teléfono</label>
+                    <input type="tel" id="paciente-telefono" maxlength="9">
+                </div>
+                <div class="form-group">
+                    <label for="paciente-fecha">Fecha de Nacimiento</label>
+                    <input type="date" id="paciente-fecha">
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                    <button type="button" class="btn-save" onclick="guardarPaciente()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Paciente -->
+    <div class="modal-overlay" id="editar-paciente">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Editar Paciente</h3>
+                <button class="btn-close" onclick="closeAllModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editar-paciente-id">
+                <div class="form-group">
+                    <label for="editar-paciente-nombre">Nombre</label>
+                    <input type="text" id="editar-paciente-nombre">
+                </div>
+                <div class="form-group">
+                    <label for="editar-paciente-apellidos">Apellidos</label>
+                    <input type="text" id="editar-paciente-apellidos">
+                </div>
+                <div class="form-group">
+                    <label for="editar-paciente-dni">DNI</label>
+                    <input type="text" id="editar-paciente-dni" maxlength="9">
+                </div>
+				<div class="form-group">
+				    <label for="editar-paciente-direccion">Dirección</label>
+				    <input type="text" id="editar-paciente-direccion">
+				</div>
+                <div class="form-group">
+                    <label for="editar-paciente-telefono">Teléfono</label>
+                    <input type="tel" id="editar-paciente-telefono" maxlength="9">
+                </div>
+                <div class="form-group">
+                    <label for="editar-paciente-fecha">Fecha de Nacimiento</label>
+                    <input type="date" id="editar-paciente-fecha">
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                    <button type="button" class="btn-save" onclick="actualizarPaciente()">Actualizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal-overlay" id="modal-confirm">
+        <div class="modal confirm">
+            <div class="modal-body">
+                <i class="fas fa-exclamation-triangle warning-icon"></i>
+                <p>¿Está seguro que desea eliminar este registro? Esta acción no se puede deshacer.</p>
+                <div class="form-buttons">
+                    <button class="btn-cancel" id="btn-cancel-delete" onclick="closeAllModals()">Cancelar</button>
+                    <button class="btn-delete" id="btn-confirm-delete" onclick="confirmarEliminar()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

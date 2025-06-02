@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">	
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+    <title>Administración Hospitalaria - Especialidades</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Hospital Admin</div>
+        <ul class="menu">
+            <li><a href="index.html"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+            <li><a href="medicos.html"><i class="fas fa-user-md"></i> Médicos</a></li>
+            <li><a href="especialidades.html" class="active"><i class="fas fa-stethoscope"></i> Especialidades</a></li>
+            <li><a href="citas.html"><i class="fas fa-calendar-check"></i> Citas</a></li>
+            <li><a href="historiales.html"><i class="fas fa-file-medical"></i> Historiales</a></li>
+        </ul>
+        <div class="user"><i class="fas fa-user-circle"></i></div>
+    </nav>
+
+    <main>
+        <header>
+            <h1>Gestión de Especialidades Médicas</h1>
+            <div class="actions">
+                <div class="search">
+                    <input type="text" id="buscar-especialidad-nombre" placeholder="Nombre de la especialidad">
+                    <button class="btn-search" onclick="buscarEspecialidades()"><i class="fas fa-search"></i></button>
+                </div>
+                <button class="btn-add" id="btn-add-especialidad" onclick="openModal('aniadir-especialidad')"><i class="fas fa-plus"></i> Añadir Especialidad</button>
+            </div>
+        </header>
+
+        <div class="card">
+            <table class="table" id="tabla-especialidades">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="consulta-especialidades">
+                    <!-- Los datos se cargarán dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal para Añadir Especialidad -->
+    <div class="modal-overlay" id="aniadir-especialidad">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Añadir Especialidad</h3>
+                <button class="btn-close" onclick="closeAllModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="especialidad-nombre">Nombre</label>
+                    <input type="text" id="especialidad-nombre">
+                </div>
+                <div class="form-group">
+                    <label for="especialidad-descripcion">Descripción</label>
+                    <textarea id="especialidad-descripcion" rows="5"></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                    <button type="button" class="btn-save" onclick="guardarEspecialidad()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Especialidad -->
+    <div class="modal-overlay" id="editar-especialidad">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Editar Especialidad</h3>
+                <button class="btn-close" onclick="closeAllModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editar-especialidad-id">
+                <div class="form-group">
+                    <label for="editar-especialidad-nombre">Nombre</label>
+                    <input type="text" id="editar-especialidad-nombre">
+                </div>
+                <div class="form-group">
+                    <label for="editar-especialidad-descripcion">Descripción</label>
+                    <textarea id="editar-especialidad-descripcion" rows="5"></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                    <button type="button" class="btn-save" onclick="actualizarEspecialidad()">Actualizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal-overlay" id="modal-confirm">
+        <div class="modal confirm">
+            <div class="modal-body">
+                <i class="fas fa-exclamation-triangle warning-icon"></i>
+                <p>¿Está seguro que desea eliminar esta especialidad? Esta acción no se puede deshacer.</p>
+                <div class="form-buttons">
+                    <button class="btn-cancel" id="btn-cancel-delete" onclick="closeAllModals()">Cancelar</button>
+                    <button class="btn-delete" id="btn-confirm-delete" onclick="confirmarEliminar()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="especialidad.js"></script>
+</body>
+</html>

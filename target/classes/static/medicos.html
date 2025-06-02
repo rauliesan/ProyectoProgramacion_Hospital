@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">	
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+    <title>Administración Hospitalaria - Médicos</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Hospital Admin</div>
+        <ul class="menu">
+            <li><a href="index.html"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+            <li><a href="medicos.html" class="active"><i class="fas fa-user-md"></i> Médicos</a></li>
+            <li><a href="especialidades.html"><i class="fas fa-stethoscope"></i> Especialidades</a></li>
+            <li><a href="citas.html"><i class="fas fa-calendar-check"></i> Citas</a></li>
+            <li><a href="historiales.html"><i class="fas fa-file-medical"></i> Historiales</a></li>
+        </ul>
+        <div class="user"><i class="fas fa-user-circle"></i></div>
+    </nav>
+
+    <main>
+        <header>
+            <h1>Gestión de Médicos</h1>
+            <div class="actions">
+                <div class="search">
+                    <input type="text" id="buscar-medico-nombre" placeholder="Nombre del médico">
+                    <input type="text" id="buscar-medico-dni" placeholder="DNI">
+                    <button class="btn-search" onclick="buscarMedicos()"><i class="fas fa-search"></i></button>
+                </div>
+                <button class="btn-add" id="btn-add-medico" onclick="openModal('aniadir-medico')"><i class="fas fa-plus"></i> Añadir Médico</button>
+            </div>
+        </header>
+
+        <div class="card">
+            <table class="table" id="tabla-medicos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>DNI</th>
+                        <th>Nº Colegiado</th>
+                        <th>Especialidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="consulta-medicos">
+                    <!-- Los datos se cargarán dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal para Añadir Médico -->
+    <div class="modal-overlay" id="aniadir-medico">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Añadir Médico</h3>
+                <button class="btn-close" onclick="closeAllModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="medico-nombre">Nombre</label>
+                    <input type="text" id="medico-nombre">
+                </div>
+                <div class="form-group">
+                    <label for="medico-apellidos">Apellidos</label>
+                    <input type="text" id="medico-apellidos">
+                </div>
+                <div class="form-group">
+                    <label for="medico-dni">DNI</label>
+                    <input type="text" id="medico-dni" maxlength="9">
+                </div>
+                <div class="form-group">
+                    <label for="medico-num-colegiado">Nº Colegiado</label>
+                    <input type="text" id="medico-num-colegiado">
+                </div>
+                <div class="form-group">
+                    <label for="medico-especialidad">Especialidad</label>
+                    <select id="medico-especialidad">
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                    <button type="button" class="btn-save" onclick="guardarMedico()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Médico -->
+    <div class="modal-overlay" id="editar-medico">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Editar Médico</h3>
+                <button class="btn-close" onclick="closeAllModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editar-medico-id">
+                <div class="form-group">
+                    <label for="editar-medico-nombre">Nombre</label>
+                    <input type="text" id="editar-medico-nombre">
+                </div>
+                <div class="form-group">
+                    <label for="editar-medico-apellidos">Apellidos</label>
+                    <input type="text" id="editar-medico-apellidos">
+                </div>
+                <div class="form-group">
+                    <label for="editar-medico-dni">DNI</label>
+                    <input type="text" id="editar-medico-dni" maxlength="9">
+                </div>
+                <div class="form-group">
+                    <label for="editar-medico-num-colegiado">Nº Colegiado</label>
+                    <input type="text" id="editar-medico-num-colegiado">
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                    <button type="button" class="btn-save" onclick="actualizarMedico()">Actualizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Añadir Especialidad a Médico -->
+    <div class="modal-overlay" id="aniadir-especialidad-medico">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Añadir Especialidad</h3>
+                <button class="btn-close" onclick="closeAllModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="medico-id-especialidad">
+                <div class="form-group">
+                    <label for="nueva-especialidad">Especialidad</label>
+                    <select id="nueva-especialidad">
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                    <button type="button" class="btn-save" onclick="guardarEspecialidadMedico()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar médico -->
+    <div class="modal-overlay" id="modal-confirm">
+        <div class="modal confirm">
+            <div class="modal-body">
+                <i class="fas fa-exclamation-triangle warning-icon"></i>
+                <p>¿Está seguro que desea eliminar este médico? Esta acción no se puede deshacer.</p>
+                <div class="form-buttons">
+                    <button class="btn-cancel" id="btn-cancel-delete" onclick="closeAllModals()">Cancelar</button>
+                    <button class="btn-delete" id="btn-confirm-delete" onclick="confirmarEliminar()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar especialidad del médico -->
+    <div class="modal-overlay" id="modal-confirm-especialidad">
+        <div class="modal confirm">
+            <div class="modal-body">
+                <i class="fas fa-exclamation-triangle warning-icon"></i>
+                <p>¿Está seguro que desea eliminar esta especialidad del médico? Esta acción no se puede deshacer.</p>
+                <div class="form-buttons">
+                    <button class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                    <button class="btn-delete" id="btn-confirm-delete-especialidad" onclick="confirmarEliminarEspecialidad()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="medico.js"></script>
+</body>
+</html>

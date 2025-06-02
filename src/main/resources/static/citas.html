@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">	
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+    <title>Administración Hospitalaria - Citas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Hospital Admin</div>
+        <ul class="menu">
+            <li><a href="index.html"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+            <li><a href="medicos.html"><i class="fas fa-user-md"></i> Médicos</a></li>
+            <li><a href="especialidades.html"><i class="fas fa-stethoscope"></i> Especialidades</a></li>
+            <li><a href="citas.html" class="active"><i class="fas fa-calendar-check"></i> Citas</a></li>
+            <li><a href="historiales.html"><i class="fas fa-file-medical"></i> Historiales</a></li>
+        </ul>
+        <div class="user"><i class="fas fa-user-circle"></i></div>
+    </nav>
+
+    <main>
+        <header>
+            <h1>Gestión de Citas Médicas</h1>
+            <div class="actions">
+                <div class="search">
+                    <input type="text" id="buscar-cita-codigo" placeholder="Código de cita">
+                    <input type="datetime-local" id="buscar-cita-fecha">
+                    <button class="btn-search" onclick="buscarCitas()"><i class="fas fa-search"></i></button>
+                </div>
+                <button class="btn-add" id="btn-add-cita" onclick="openModal('aniadir-cita')"><i class="fas fa-plus"></i> Añadir Cita</button>
+            </div>
+        </header>
+
+        <div class="card">
+            <table class="table" id="tabla-citas">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Paciente</th>
+                        <th>Médico</th>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Fecha y Hora</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="consulta-citas">
+                    <!-- Los datos se cargarán dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal para Añadir Cita -->
+    <div class="modal-overlay" id="aniadir-cita">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Añadir Cita</h3>
+                <button class="btn-close" onclick="closeAllModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="cita-paciente">Paciente</label>
+                    <select id="cita-paciente">
+                        <option value="">Seleccione un paciente...</option>
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cita-medico">Médico</label>
+                    <select id="cita-medico">
+                        <option value="">Seleccione un médico...</option>
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cita-codigo">Código</label>
+                    <input type="text" id="cita-codigo">
+                </div>
+                <div class="form-group">
+                    <label for="cita-descripcion">Descripción</label>
+                    <textarea id="cita-descripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cita-fecha-hora">Fecha y Hora</label>
+                    <input type="datetime-local" id="cita-fecha-hora">
+                </div>
+                <div class="form-group">
+                    <label for="cita-estado">Estado</label>
+                    <select id="cita-estado">
+						<option value="Pendiente">Pendiente</option>
+						<option value="Confirmada">Confirmada</option>
+						<option value="Cancelada">Cancelada</option>
+						<option value="Realizada">Realizada</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                    <button type="button" class="btn-save" onclick="guardarCita()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Cita -->
+    <div class="modal-overlay" id="editar-cita">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Editar Cita</h3>
+                <button class="btn-close" onclick="closeAllModals()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editar-cita-id">
+                <div class="form-group">
+                    <label for="editar-cita-paciente">Paciente</label>
+                    <select id="editar-cita-paciente">
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editar-cita-medico">Médico</label>
+                    <select id="editar-cita-medico">
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editar-cita-codigo">Código</label>
+                    <input type="text" id="editar-cita-codigo">
+                </div>
+                <div class="form-group">
+                    <label for="editar-cita-descripcion">Descripción</label>
+                    <textarea id="editar-cita-descripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editar-cita-fecha-hora">Fecha y Hora</label>
+                    <input type="datetime-local" id="editar-cita-fecha-hora">
+                </div>
+                <div class="form-group">
+                    <label for="editar-cita-estado">Estado</label>
+                    <select id="editar-cita-estado">
+						<option value="Pendiente">Pendiente</option>
+						<option value="Confirmada">Confirmada</option>
+						<option value="Cancelada">Cancelada</option>
+						<option value="Realizada">Realizada</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeAllModals()">Cancelar</button>
+                    <button type="button" class="btn-save" onclick="actualizarCita()">Actualizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar cita -->
+    <div class="modal-overlay" id="modal-confirm">
+        <div class="modal confirm">
+            <div class="modal-body">
+                <i class="fas fa-exclamation-triangle warning-icon"></i>
+                <p>¿Está seguro que desea eliminar esta cita? Esta acción no se puede deshacer.</p>
+                <div class="form-buttons">
+                    <button class="btn-cancel" id="btn-cancel-delete" onclick="closeAllModals()">Cancelar</button>
+                    <button class="btn-delete" id="btn-confirm-delete" onclick="confirmarEliminar()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="cita.js"></script>
+</body>
+</html>
